@@ -1,4 +1,4 @@
-[root@vsbl2155127 ~]# ansible all -a "/sbin/reboot"  >>> This command reboot the all reserver.
+[root@vsbl2155127 ~]# ansible all -a "/sbin/reboot"  >>> This command reboot the all reserver. ( By default this command only executed on five target servers)
 172.20.154.203 | FAILED | rc=-1 >>
 Failed to connect to the host via ssh: ssh: connect to host 172.20.154.203 port 22: Connection refused
 [root@vsbl2155127 ~]# ansible all -a "/sbin/reboot"
@@ -7,3 +7,125 @@ Failed to connect to the host via ssh: ssh: connect to host 172.20.154.203 port 
 [root@vsbl2155127 ~]# ansible all -a "/sbin/shutdown"  >> This command help to shutdown all vm's
 172.20.154.203 | CHANGED | rc=0 >>
 Shutdown scheduled for Sun 2024-12-29 08:02:18 IST, use 'shutdown -c' to cancel.
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+[root@vsbl2155127 ~]# ansible all -a "/sbin/shutdown" -f 10 -u root  >>> This command helps to delete 10 servers at a time.
+172.20.154.203 | CHANGED | rc=0 >>
+Shutdown scheduled for Sun 2024-12-29 08:08:14 IST, use 'shutdown -c' to cancel.
+[root@vsbl2155127 ~]#
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+[root@vsbl2155127 ~]# ansible all -m ansible.builtin.shell -a "echo $Hello"  >> This command helps to set environmental variables in the target server.
+172.20.154.203 | CHANGED | rc=0 >>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+[root@vsbl2155127 ~]# ansible all -m ansible.builtin.copy -a "src=/etc/dhcp  dest=/root/"  >> This command helps to copy source files to target servers.
+172.20.154.203 | CHANGED => {
+    "changed": true,
+    "dest": "/root/",
+    "src": "/etc/dhcp"
+}
+[root@vsbl2155127 ~]#
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+[root@vsbl2155127 ~]# ansible all -m ansible.builtin.file -a "dest=/root/dhcp state=absent"  >> This command helps to delete the folder and files from target servers.
+172.20.154.203 | CHANGED => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": true,
+    "path": "/root/dhcp",
+    "state": "absent"
+}
+[root@vsbl2155127 ~]#
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+[root@vsbl2155127 ~]# ansible localhost -m ansible.builtin.yum -a "name=httpd state=absent"  >> This command helps to delete the package from the server.
+localhost | CHANGED => {
+    "ansible_facts": {
+        "pkg_mgr": "dnf"
+    },
+    "changed": true,
+    "msg": "",
+    "rc": 0,
+    "results": [
+        "Removed: httpd-2.4.37-56.module+el8.8.0+18556+a66138c1.4.x86_64",
+        "Removed: mod_http2-1.15.7-8.module+el8.8.0+18556+a66138c1.3.x86_64"
+    ]
+}
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+[root@vsbl2155127 BaseOS]# ansible localhost -m ansible.builtin.yum -a "name=httpd state=present"  >> This command used for package installation
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+[root@vsbl2155127 BaseOS]# ansible all -m ping   >> This command populate ping response for target server.
+172.20.155.111 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/libexec/platform-python"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+[root@vsbl2155127 BaseOS]#
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+[root@vsbl2155127 BaseOS]# ansible all -m ansible.builtin.user -a "name=amba state=present"  >> This command used for user creation on target server.
+172.20.155.111 | CHANGED => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/libexec/platform-python"
+    },
+    "changed": true,
+    "comment": "",
+    "create_home": true,
+    "group": 1001,
+    "home": "/home/amba",
+    "name": "amba",
+    "shell": "/bin/bash",
+    "state": "present",
+    "system": false,
+    "uid": 1001
+}
+[root@vsbl2155127 BaseOS]#
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+[root@vsbl2155127 BaseOS]# ansible all -m ansible.builtin.service -a "name=httpd state=started"   >> This command help to start the services on remote server
+172.20.155.111 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/libexec/platform-python"
+    },
+    "changed": false,
+    "name": "httpd",
+    "state": "started",
+    "status": {
+        "ActiveEnterTimestamp": "Sat 2024-12-28 14:55:39 IST",
+        "ActiveEnterTimestampMonotonic": "172298813",
+        "ActiveExitTimestampMonotonic": "0",
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+[root@vsbl2155127 BaseOS]# ansible all -m ansible.builtin.shell -a "systemctl status httpd"  >> This command helps to check the services status on the target server.
+172.20.155.111 | CHANGED | rc=0 >>
+● httpd.service - The Apache HTTP Server
+   Loaded: loaded (/usr/lib/systemd/system/httpd.service; enabled; vendor preset: disabled)
+   Active: active (running) since Sat 2024-12-28 14:55:39 IST; 17h ago
+     Docs: man:httpd.service(8)
+  Process: 35654 ExecReload=/usr/sbin/httpd $OPTIONS -k graceful (code=exited, status=0/SUCCESS)
+ Main PID: 1481 (httpd)
+   Status: "Running, listening on: port 8080"
+    Tasks: 214 (limit: 49327)
+>>>>>>>>>>>>>>>>>>>>>>>>>>
+[root@vsbl2155127 BaseOS]# ansible all -m ansible.builtin.shell -a "uptime"  >> This command helps to show the uptime of the remote server
+172.20.155.111 | CHANGED | rc=0 >>
+ 08:50:34 up 17:57,  1 user,  load average: 0.00, 0.04, 0.01
+>>>>>>>>>>>>>>>>>>>>>>>>>>>
+[root@vsbl2155127 BaseOS]# ansible all -m ansible.builtin.shell -a "date"
+172.20.155.111 | CHANGED | rc=0 >>
+Sun Dec 29 08:51:29 IST 2024
+>>>>>>>>>>>>>>>>>>>>>>>>>
+[root@vsbl2155127 BaseOS]# ansible all -m ansible.builtin.shell -a "ls -ltr"  >> This command helps to populate all files in the root user directory.
+172.20.155.111 | CHANGED | rc=0 >>
+total 471256
+-rw-------. 1 root root      2158 Aug 18  2023 anaconda-ks.cfg
+-rw-r--r--. 1 root root      2578 Aug 18  2023 initial-setup-ks.cfg
+drwxr-xr-x. 2 root root         6 Aug 18  2023 Templates
+drwxr-xr-x. 2 root root         6 Aug 18  2023 Public
+drwxr-xr-x. 2 root root         6 Aug 18  2023 Downloads
+drwxr-xr-x. 2 root root         6 Aug 18  2023 Desktop
+drwxr-xr-x. 2 root root         6 Aug 18  2023 Videos
+drwxr-xr-x. 2 root root         6 Aug 18  2023 Pictures
+drwxr-xr-x. 2 root root         6 Aug 18  2023 Music
+drwxr-xr-x. 2 root root         6 Aug 18  2023 Documents
+-rw-r--r--. 1 root root    108106 Oct  9 00:13 ansible_mas_install.log
+-rw-r--r--. 1 root root     33204 Oct  9 13:07 loader.js
+-rw-r--r--. 1 root root     26742 Oct 14 23:08 ansible_manage_install.log
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
