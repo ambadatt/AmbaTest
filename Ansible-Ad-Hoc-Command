@@ -1,0 +1,9 @@
+[root@vsbl2155127 ~]# ansible all -a "/sbin/reboot"  >>> This command reboot the all reserver.
+172.20.154.203 | FAILED | rc=-1 >>
+Failed to connect to the host via ssh: ssh: connect to host 172.20.154.203 port 22: Connection refused
+[root@vsbl2155127 ~]# ansible all -a "/sbin/reboot"
+172.20.154.203 | FAILED | rc=-1 >>
+Failed to connect to the host via ssh: ssh: connect to host 172.20.154.203 port 22: Connection reset by peer
+[root@vsbl2155127 ~]# ansible all -a "/sbin/shutdown"  >> This command help to shutdown all vm's
+172.20.154.203 | CHANGED | rc=0 >>
+Shutdown scheduled for Sun 2024-12-29 08:02:18 IST, use 'shutdown -c' to cancel.
