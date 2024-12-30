@@ -1,0 +1,75 @@
+[root@vsbl2155127 ansible]# ansible-vault encrypt db2user-loop.yml  >> This command used for encrypting yaml file.
+New Vault password:
+Confirm New Vault password:
+Encryption successful
+[root@vsbl2155127 ansible]# ll
+total 48
+-rw-r--r-- 1 root root  401 Dec 28 22:07 copy-file-from-source-destination.yml
+-rw-r--r-- 1 root root  697 Dec 20 13:07 db2unistall.yml
+-rw------- 1 root root 3465 Dec 30 08:42 db2user-loop.yml
+-rw-r--r-- 1 root root  679 Dec 19 08:45 Dockerfile
+-rw-r--r-- 1 root root  307 Dec 18 21:27 epeltest.yml
+-rw-r--r-- 1 root root  125 Dec 18 21:09 helloword.yml
+-rw-r--r-- 1 root root  147 Dec 18 21:15 multitask.yml
+-rw-r--r-- 1 root root  156 Dec 19 09:36 package-upgradation-remote.yml
+-rw-r--r-- 1 root root  227 Dec 28 22:10 packinstal.yml
+-rw-r--r-- 1 root root  194 Dec 19 09:30 remote-file-permission-change.yml
+drwxr-xr-x 2 root root   51 Dec 20 09:21 taddm
+-rw-r--r-- 1 root root  151 Dec 19 08:36 test-connectivit.yml
+-rw-r--r-- 1 root root   99 Dec 18 20:57 test.yml
+[root@vsbl2155127 ansible]# vi db2user-loop.yml  >> This does not show the original file version only the encrypted form.
+[root@vsbl2155127 ansible]# ansible-vault decrypt db2user-loop.yml   >> This command used for decrypt the file.
+Vault password:
+Decryption successful
+[root@vsbl2155127 ansible]# vi db2user-loop.yml
+[root@vsbl2155127 ansible]# ansible-vault edit db2user-loop.yml  >> This command helps to edit or show data on file.
+Vault password:
+[root@vsbl2155127 ansible]# ansible-vault rekey db2user-loop.yml >> This command help to reset password for encrypted.
+Vault password:
+New Vault password:
+Confirm New Vault password:
+Rekey successful
+[root@vsbl2155127 ansible]#
+[root@vsbl2155127 ansible]# ansible-vault encrypt_string 'Airtel@123' --name 'db2_password'  >> This command used for encrypt user password.
+New Vault password:
+Confirm New Vault password:
+Encryption successful
+db2_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          30326432323261323666613332353733626666643266356230663666656165376236393739336136
+          6630323366356461353263623266653437643563313239330a356338643661363361343734323032
+          62643234373064633961386238363361323138376464386466303931666235383831373538646161
+          3862633439613863390a646435306331376235333837373937323964323937353535346233653033
+          6265
+[root@vsbl2155127 ansible]#
+>>>>>>>>>>>>>>>>
+Example for using Vault.
+
+MySQL.yml
+---
+  - name: Deploy db2app
+    hosts: all
+    become: yes
+    var_files:
+      - secret.yml
+    tasks:
+      - name: configure database
+        mysql_user:
+          name: admin
+          password: "{{db2_password}}"
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+Secret.yml
+---
+- name: db2password
+db2_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          30326432323261323666613332353733626666643266356230663666656165376236393739336136
+          6630323366356461353263623266653437643563313239330a356338643661363361343734323032
+          62643234373064633961386238363361323138376464386466303931666235383831373538646161
+          3862633439613863390a646435306331376235333837373937323964323937353535346233653033
+          6265
+>>>>>>>>>>>>>>>>>>>>>>
+Then test file is working or not
+[root@vsbl2155127 ansible]# ansible-playbook mysql-test.yml --ask-vault-pass >> This command help to use vault protected string.
+Vault password:
+
